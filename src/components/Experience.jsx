@@ -11,9 +11,11 @@ const Experience = () => {
       period: 'Sep 2025 - Present',
       current: true,
       description: [
-        'Built and deployed a production ML system that lifted flight add-on profits by 55%',
-        'Designed a reinforcement learning solution for Google Ads bidding that cut acquisition costs by 30%',
-        'Developed scalable MLOps pipelines using AWS SageMaker and MLflow to automate training and deployment',
+        'Engineered and deployed a production-grade ML forecasting system for flight add-on revenue, driving a 55% increase in profits.',
+        'Developed an XGBoost-based financial forecasting model that reduced prediction MAPE error by 80%, directly improving budgeting accuracy.',
+        'Designed and implemented an ML bidding strategy for Google Ads, reducing customer acquisition costs by 30% through dynamic bid optimization.',
+        'Architected end-to-end MLOps pipelines on AWS SageMaker and MLflow, automating model training, versioning, and deployment at scale.',
+        'Architecting a production voice AI agent using Retell AI, optimizing dialogue flow, LLM response quality, and call handling latency for real-time customer interactions.',
       ],
     },
     {
@@ -22,11 +24,11 @@ const Experience = () => {
       location: 'Dubai, United Arab Emirates',
       period: 'Jan 2023 - Aug 2025',
       description: [
-        'Developed and deployed production-grade LLM applications for chatbots, document Q&A, and intelligent assistants using Transformers, LangChain, and RAG, achieving over 85% accuracy',
-        'Fine-tuned transformer models with QLoRA and LoRA across tourism, agriculture, and healthcare, improving task accuracy by up to 18%',
-        'Built scalable MLOps pipelines on AWS SageMaker, MLflow, Airflow, and TorchServe, cutting deployment time by 30%',
-        'Engineered optimized prompts and RLHF to enhance LLM summarization and multi-turn dialogue performance',
-        'Deployed serverless AI APIs using Docker and AWS Lambda, reducing hosting costs by 25%',
+        'Developed and deployed production-grade LLM applications for chatbots, document Q&A, and intelligent assistants using Transformers, LangChain, and RAG, achieving over 85% accuracy in real-world tasks.',
+        'Deployed serverless AI APIs using Docker and AWS Lambda, reducing hosting costs by 25% and maintaining sub-3-second response latency under 1000 RPS.',
+        'Built scalable MLOps pipelines on AWS SageMaker, MLflow, Airflow, and TorchServe, cutting deployment time by 30% and automating versioning, CI/CD, and monitoring.',
+        'Fine-tuned transformer models with QLoRA and LoRA across tourism, agriculture, and healthcare, improving task accuracy by up to 18%.',
+        'Engineered optimized prompts and RLHF to enhance LLM summarization and multi-turn dialogue performance.',
       ],
     },
     {
@@ -35,11 +37,10 @@ const Experience = () => {
       location: 'Dubai, United Arab Emirates',
       period: 'Feb 2021 - Jan 2023',
       description: [
-        'Built and deployed ML models for user behavior prediction using mood analysis and sentiment analysis, improving engagement insights by 30%',
-        'Led end-to-end ML workflows using Scikit-learn, TensorFlow, and PyTorch, increasing model precision by 20%',
-        'Implemented experiment tracking and model versioning for better reproducibility',
-        'Designed classic ML models (Random Forests, XGBoost, SVMs) improving prediction accuracy by up to 22%',
-        'Conducted A/B testing and post-deployment validation to ensure model reliability',
+        'Built and deployed machine learning models for user behavior prediction using mood analysis, psychological profiling, and sentiment analysis, improving engagement insights by 30%.',
+        'Designed and trained classic machine learning models (random forests, XGBoost, SVMs) for structured data tasks, improving prediction accuracy by up to 22% over baseline.',
+        'Led end-to-end ML workflows — data preprocessing, EDA, model training, tuning, and evaluation — using Scikit-learn, TensorFlow, and PyTorch, increasing model precision by 20%.',
+        'Implemented experiment tracking and model versioning for better reproducibility and lifecycle management.',
       ],
     },
     {
@@ -48,10 +49,10 @@ const Experience = () => {
       location: 'Sharjah, United Arab Emirates',
       period: 'Aug 2020 - Feb 2021',
       description: [
-        'Authored 6+ peer-reviewed AI research papers including 2 in Q1-ranked journals, with 350+ citations',
-        'Developed optimized Arabic text summarization approach using transformer models with RBF Networks, reducing training time by 45%',
-        'Built BERT-based models for Arabic fake news detection, achieving 90%+ classification accuracy',
-        'Designed deep learning architectures for Alzheimer\'s detection using MRI and heart failure prediction',
+        'Authored 6+ peer-reviewed AI research papers — including 2 in Q1-ranked journals — with 490+ total citations and h-index of 4, focusing on deep learning, NLP, and clinical applications.',
+        'Developed an optimized Arabic text summarization approach in Master\'s thesis by fine-tuning transformer models with Radial Basis Function Neural Networks, reducing training time by 45%.',
+        'Developed BERT-based models for Arabic fake news detection, achieving 90%+ classification accuracy and published in high-impact NLP journals.',
+        'Designed and evaluated Deep Learning architectures for Alzheimer\'s detection using MRI and heart failure prediction using structured medical datasets.',
       ],
     },
   ];

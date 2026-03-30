@@ -50,22 +50,22 @@ const About = () => {
             transition={{ duration: 0.6 }}
           >
             <p>
-              I'm a Machine Learning Engineer and Data Scientist with <strong>5+ years</strong> of
-              experience delivering production-ready AI solutions. Currently based in <strong>Dubai, UAE</strong>,
-              I specialize in building scalable machine learning systems across NLP, Computer Vision,
-              and deep learning domains.
+              Machine Learning Engineer and AI Researcher with <strong>6+ years</strong> building and deploying
+              production ML systems across classical ML, deep learning, and LLMs.
             </p>
             <p>
-              My journey spans from research to production — I hold an <strong>M.Sc. in Computer Engineering
-              (AI)</strong> from the University of Sharjah, where I focused on optimizing Large Language Models
-              for Arabic text summarization. This academic foundation, combined with hands-on industry
-              experience, allows me to bridge cutting-edge research with practical business applications.
+              I work across the full ML spectrum — from tree-based models and ensemble methods on structured data,
+              to transformer fine-tuning, RAG systems, and end-to-end MLOps pipelines on <strong>AWS</strong> and <strong>GCP</strong>.
+              My focus is always on solutions that deliver measurable business impact.
             </p>
             <p>
-              I'm passionate about the entire ML lifecycle: from experimentation and model development
-              to MLOps, deployment, and monitoring. I've successfully deployed LLM applications achieving
-              <strong>85%+ accuracy</strong>, reduced ML deployment time by <strong>30%</strong>, and cut hosting costs by
-              <strong>25%</strong> through optimized architectures.
+              Strong MLOps background: reproducible pipelines, experiment tracking, model versioning, and automated
+              deployment using <strong>SageMaker</strong>, <strong>MLflow</strong>, <strong>Airflow</strong>, <strong>Docker</strong>, and <strong>Lambda</strong>.
+            </p>
+            <p>
+              Published researcher: <strong>6+ peer-reviewed papers</strong> (490+ citations, h-index 4) in Q1 journals —
+              covering Arabic NLP, healthcare AI, and transformer optimization. Currently ML Engineer in travel tech
+              and part-time researcher at <strong>University of Sharjah</strong>.
             </p>
 
             <div className="about-info">

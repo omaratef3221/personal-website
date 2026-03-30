@@ -19,6 +19,7 @@ const Contact = () => {
     subject: '',
     message: '',
   });
+  const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
   const handleChange = (e) => {
     setFormData({
@@ -27,14 +28,24 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const mailtoLink = `mailto:omaratef3221@gmail.com?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
-    )}`;
-    window.location.href = mailtoLink;
+    setStatus('sending');
+    try {
+      const res = await fetch('https://formspree.io/f/xovoorrv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   };
 
   const contactInfo = [
@@ -217,10 +228,17 @@ const Contact = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary form-submit">
+            <button type="submit" className="btn btn-primary form-submit" disabled={status === 'sending'}>
               <FiSend size={18} />
-              Send Message
+              {status === 'sending' ? 'Sending...' : 'Send Message'}
             </button>
+
+            {status === 'success' && (
+              <p className="form-feedback form-feedback--success">Message sent! I'll get back to you soon.</p>
+            )}
+            {status === 'error' && (
+              <p className="form-feedback form-feedback--error">Something went wrong. Please try again.</p>
+            )}
           </motion.form>
         </div>
       </div>

@@ -6,50 +6,22 @@ const Skills = () => {
     {
       title: 'Machine Learning & AI',
       icon: '🤖',
-      skills: [
-        { name: 'Python', level: 95 },
-        { name: 'TensorFlow', level: 90 },
-        { name: 'PyTorch', level: 90 },
-        { name: 'Scikit-learn', level: 92 },
-        { name: 'Transformers', level: 88 },
-        { name: 'XGBoost', level: 85 },
-      ],
+      skills: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Transformers', 'XGBoost', 'Keras', 'NumPy', 'Pandas'],
     },
     {
       title: 'LLMs & NLP',
       icon: '🧠',
-      skills: [
-        { name: 'LangChain', level: 90 },
-        { name: 'LangGraph', level: 85 },
-        { name: 'RAG Systems', level: 88 },
-        { name: 'Fine-tuning (LoRA/QLoRA)', level: 88 },
-        { name: 'RLHF', level: 82 },
-        { name: 'NLTK', level: 85 },
-      ],
+      skills: ['LangChain', 'LangGraph', 'RAG Systems', 'Fine-tuning (LoRA/QLoRA)', 'RLHF', 'NLTK', 'Prompt Engineering', 'Retell AI'],
     },
     {
       title: 'MLOps & Cloud',
       icon: '☁️',
-      skills: [
-        { name: 'AWS SageMaker', level: 88 },
-        { name: 'Docker', level: 90 },
-        { name: 'MLflow', level: 88 },
-        { name: 'Airflow', level: 85 },
-        { name: 'CI/CD', level: 85 },
-        { name: 'Kubernetes', level: 75 },
-      ],
+      skills: ['AWS SageMaker', 'Docker', 'MLflow', 'Airflow', 'CI/CD', 'Kubernetes', 'TorchServe', 'AWS Lambda', 'GCP'],
     },
     {
       title: 'Data & Backend',
       icon: '💾',
-      skills: [
-        { name: 'SQL/PostgreSQL', level: 88 },
-        { name: 'MongoDB', level: 85 },
-        { name: 'FastAPI', level: 88 },
-        { name: 'Flask', level: 85 },
-        { name: 'Apache Spark', level: 78 },
-        { name: 'NumPy/Pandas', level: 95 },
-      ],
+      skills: ['SQL/PostgreSQL', 'MongoDB', 'FastAPI', 'Flask', 'Apache Spark', 'Prometheus', 'Grafana', 'Git', 'Linux'],
     },
   ];
 
@@ -92,23 +64,9 @@ const Skills = () => {
                 <h3 className="category-title">{category.title}</h3>
               </div>
 
-              <div className="skills-list">
+              <div className="skills-tags">
                 {category.skills.map((skill) => (
-                  <div key={skill.name} className="skill-item">
-                    <div className="skill-info">
-                      <span className="skill-name">{skill.name}</span>
-                      <span className="skill-level">{skill.level}%</span>
-                    </div>
-                    <div className="skill-bar">
-                      <motion.div
-                        className="skill-progress"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                      />
-                    </div>
-                  </div>
+                  <span key={skill} className="skill-tag">{skill}</span>
                 ))}
               </div>
             </motion.div>

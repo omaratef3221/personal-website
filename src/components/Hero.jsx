@@ -1,10 +1,25 @@
 import { FiGithub, FiLinkedin, FiYoutube, FiArrowDown } from 'react-icons/fi';
 import { SiHuggingface, SiGooglescholar } from 'react-icons/si';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import portrait from '../assets/omar_portrait.png';
+import { fetchScholarData, getCachedData } from '../services/scholarService';
 import './Hero.css';
 
 const Hero = () => {
+  const [citations, setCitations] = useState(() => {
+    const cached = getCachedData();
+    return cached?.stats?.totalCitations ?? null;
+  });
+
+  useEffect(() => {
+    fetchScholarData().then((data) => {
+      if (data?.stats?.totalCitations) {
+        setCitations(data.stats.totalCitations);
+      }
+    });
+  }, []);
+
   const socialLinks = [
     { icon: <FiGithub size={22} />, href: 'https://github.com/omaratef3221', label: 'GitHub' },
     { icon: <FiLinkedin size={22} />, href: 'https://www.linkedin.com/in/omaratef3221/', label: 'LinkedIn' },
@@ -25,28 +40,21 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="hero-badge">
-            <span className="badge-dot"></span>
-            Available for opportunities
-          </div>
-
           <h1 className="hero-title">
             Hi, I'm <span className="text-gradient">Omar Elgendy</span>
           </h1>
 
           <h2 className="hero-subtitle">
-            Machine Learning Engineer & Data Scientist
+            Machine Learning Engineer | Data Scientist
           </h2>
 
           <p className="hero-description">
-            I build production-ready AI solutions across Machine Learning, NLP, and Computer Vision.
-            Specialized in scalable MLOps, cloud deployment, and fine-tuning large-scale transformer models.
-            Published researcher with 6+ papers and 350+ citations.
+            Machine Learning Engineer and AI Researcher with 6+ years building and deploying production ML systems across classical ML, deep learning, and LLMs. Proficient across the full ML spectrum — from tree-based models and ensemble methods on structured data, to transformer fine-tuning, RAG systems, and end-to-end MLOps pipelines on AWS and GCP. Published researcher with 6+ peer-reviewed papers (490+ citations, h-index 4) in Q1 journals — covering Arabic NLP, healthcare AI, and transformer optimization.
           </p>
 
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-number">5+</span>
+              <span className="stat-number">6+</span>
               <span className="stat-label">Years Experience</span>
             </div>
             <div className="stat">
@@ -54,7 +62,7 @@ const Hero = () => {
               <span className="stat-label">Publications</span>
             </div>
             <div className="stat">
-              <span className="stat-number">350+</span>
+              <span className="stat-number">{citations !== null ? `${citations}+` : '...'}</span>
               <span className="stat-label">Citations</span>
             </div>
           </div>
