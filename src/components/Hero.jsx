@@ -7,16 +7,14 @@ import { fetchScholarData, getCachedData } from '../services/scholarService';
 import './Hero.css';
 
 const Hero = () => {
-  const [citations, setCitations] = useState(() => {
+  const [scholarStats, setScholarStats] = useState(() => {
     const cached = getCachedData();
-    return cached?.stats?.totalCitations ?? null;
+    return cached?.stats ?? null;
   });
 
   useEffect(() => {
     fetchScholarData().then((data) => {
-      if (data?.stats?.totalCitations) {
-        setCitations(data.stats.totalCitations);
-      }
+      if (data?.stats) setScholarStats(data.stats);
     });
   }, []);
 
@@ -49,7 +47,7 @@ const Hero = () => {
           </h2>
 
           <p className="hero-description">
-            Machine Learning Engineer and AI Researcher with 6+ years building and deploying production ML systems across classical ML, deep learning, and LLMs. Proficient across the full ML spectrum — from tree-based models and ensemble methods on structured data, to transformer fine-tuning, RAG systems, and end-to-end MLOps pipelines on AWS and GCP. Published researcher with 6+ peer-reviewed papers (490+ citations, h-index 4) in Q1 journals — covering Arabic NLP, healthcare AI, and transformer optimization.
+            Machine Learning Engineer and AI Researcher with 6+ years building and deploying production ML systems across classical ML, deep learning, and LLMs. Proficient across the full ML spectrum — from tree-based models and ensemble methods on structured data, to transformer fine-tuning, RAG systems, and end-to-end MLOps pipelines on AWS and GCP. Published researcher with 6+ peer-reviewed papers ({scholarStats?.totalCitations ?? '490'}+ citations, h-index {scholarStats?.hIndex ?? '4'}) in Q1 journals — covering Arabic NLP, healthcare AI, and transformer optimization.
           </p>
 
           <div className="hero-stats">
@@ -62,7 +60,7 @@ const Hero = () => {
               <span className="stat-label">Publications</span>
             </div>
             <div className="stat">
-              <span className="stat-number">{citations !== null ? `${citations}+` : '...'}</span>
+              <span className="stat-number">{scholarStats?.totalCitations != null ? `${scholarStats.totalCitations}+` : '...'}</span>
               <span className="stat-label">Citations</span>
             </div>
           </div>
