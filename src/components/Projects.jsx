@@ -1,31 +1,65 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiGithub, FiExternalLink, FiYoutube, FiBook, FiStar, FiGitBranch, FiRefreshCw, FiArrowRight } from 'react-icons/fi';
+import { FiGithub, FiExternalLink, FiYoutube, FiBook, FiStar, FiGitBranch, FiRefreshCw, FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
 import { SiHuggingface, SiUdemy, SiMedium } from 'react-icons/si';
 import {
   fetchGitHubRepos,
   getCachedRepos,
   shouldRefreshRepos,
   getLanguageColor,
-  getRepoIcon,
 } from '../services/githubService';
 import './Projects.css';
+
+const resources = [
+  {
+    title: 'Udemy Courses',
+    description: 'Courses on ML, AI, and Data Science',
+    icon: <SiUdemy size={20} />,
+    href: 'https://www.udemy.com/user/omar-m-atef-2/',
+  },
+  {
+    title: 'YouTube',
+    description: 'Tutorials on ML, AI, and engineering',
+    icon: <FiYoutube size={20} />,
+    href: 'https://www.youtube.com/@OmarMAtef',
+  },
+  {
+    title: 'Medium',
+    description: 'Technical writing & deep-dives',
+    icon: <SiMedium size={20} />,
+    href: 'https://medium.com/@omaratef3221',
+  },
+  {
+    title: 'Hugging Face',
+    description: 'Open-source models & datasets',
+    icon: <SiHuggingface size={20} />,
+    href: 'https://huggingface.co/Omaratef3221',
+  },
+];
+
+const formatDate = (iso) => {
+  const date = new Date(iso);
+  const now = new Date();
+  const diffDays = Math.floor(Math.abs(now - date) / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+  return `${Math.floor(diffDays / 365)}y ago`;
+};
 
 const Projects = () => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadRepos = async (forceRefresh = false) => {
+  const load = async (force = false) => {
     try {
-      if (forceRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+      if (force) setRefreshing(true);
+      else setLoading(true);
 
-      // Check cache first
-      if (!forceRefresh) {
+      if (!force) {
         const cached = getCachedRepos();
         if (cached && !shouldRefreshRepos()) {
           setRepos(cached.repos);
@@ -38,176 +72,116 @@ const Projects = () => {
         }
       }
 
-      const freshRepos = await fetchGitHubRepos();
-      setRepos(freshRepos);
-    } catch (error) {
-      console.error('Failed to load repos:', error);
+      const fresh = await fetchGitHubRepos();
+      setRepos(fresh);
+    } catch (e) {
+      console.error('Failed to load repos:', e);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    loadRepos();
-  }, []);
+  useEffect(() => { load(); }, []);
 
   const handleRefresh = () => {
     localStorage.removeItem('githubRepos');
-    loadRepos(true);
+    load(true);
   };
 
-  // Get top 6 repos for display
-  const displayRepos = repos.slice(0, 6);
-
-  const resources = [
-    {
-      title: 'Udemy Courses',
-      description: 'Courses on Machine Learning, AI, and Data Science',
-      icon: <SiUdemy size={24} />,
-      link: 'https://www.udemy.com/user/omar-m-atef-2/',
-      color: '#a435f0',
-    },
-    {
-      title: 'YouTube Channel',
-      description: 'Video tutorials on ML, AI, and Data Science',
-      icon: <FiYoutube size={24} />,
-      link: 'https://www.youtube.com/@OmarMAtef',
-      color: '#ff0000',
-    },
-    {
-      title: 'Medium Blogs',
-      description: 'Technical articles and tutorials',
-      icon: <SiMedium size={24} />,
-      link: 'https://medium.com/@omaratef3221',
-      color: '#000000',
-    },
-    {
-      title: 'HuggingFace',
-      description: 'Models and datasets',
-      icon: <SiHuggingface size={24} />,
-      link: 'https://huggingface.co/Omaratef3221',
-      color: '#ffcc00',
-    },
-  ];
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    return `${Math.floor(diffDays / 365)} years ago`;
-  };
+  const display = repos.slice(0, 6);
 
   return (
-    <section id="projects" className="section projects">
-      <div className="bg-gradient-blur bg-gradient-blur-2"></div>
+    <section id="projects" className="section projects" aria-labelledby="projects-title">
       <div className="container">
         <motion.div
           className="projects-header"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
         >
           <div>
-            <h2 className="section-title">Projects</h2>
+            <span className="eyebrow">05 — Code</span>
+            <h2 id="projects-title" className="section-title">
+              Open source <em>&amp; experiments</em>.
+            </h2>
             <p className="section-subtitle">
-              My latest work from GitHub - automatically synced
+              Recent work, automatically synced from GitHub.
             </p>
           </div>
 
           <button
-            className={`refresh-btn ${refreshing ? 'refreshing' : ''}`}
+            type="button"
+            className={`pub-refresh ${refreshing ? 'is-refreshing' : ''}`}
             onClick={handleRefresh}
             disabled={refreshing}
-            title="Refresh from GitHub"
+            aria-label="Sync from GitHub"
           >
-            <FiRefreshCw size={18} />
-            {refreshing ? 'Syncing...' : 'Sync'}
+            <FiRefreshCw size={15} />
+            <span>{refreshing ? 'Syncing' : 'Sync'}</span>
           </button>
         </motion.div>
 
         <AnimatePresence mode="wait">
           {loading && repos.length === 0 ? (
             <motion.div
-              className="loading-state"
+              key="loading"
+              className="projects-loading"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className="loading-spinner"></div>
-              <p>Fetching projects from GitHub...</p>
+              <span className="pub-spinner" /> Fetching projects…
             </motion.div>
           ) : (
             <motion.div
+              key="grid"
               className="projects-grid"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {displayRepos.map((repo, index) => (
+              {display.map((repo, i) => (
                 <motion.a
                   key={repo.id}
                   href={repo.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="project-card"
-                  initial={{ opacity: 0, y: 30 }}
+                  className="project"
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{ duration: 0.45, delay: i * 0.05 }}
                 >
-                  <div className="project-card-header">
+                  <div className="project-top">
                     <div className="project-stats">
-                      <span className="stat">
-                        <FiStar size={14} />
-                        {repo.stars}
-                      </span>
-                      <span className="stat">
-                        <FiGitBranch size={14} />
-                        {repo.forks}
-                      </span>
+                      <span className="project-stat"><FiStar size={13} /> {repo.stars}</span>
+                      <span className="project-stat"><FiGitBranch size={13} /> {repo.forks}</span>
                     </div>
+                    <FiArrowUpRight size={16} className="project-arrow" />
                   </div>
 
-                  <h3 className="project-title">{repo.name}</h3>
-                  <p className="project-description">{repo.description}</p>
+                  <h3 className="project-name">{repo.name}</h3>
+                  <p className="project-desc">{repo.description}</p>
 
-                  <div className="project-meta">
+                  <div className="project-foot">
                     {repo.language && (
-                      <span className="project-language">
-                        <span
-                          className="language-dot"
-                          style={{ backgroundColor: getLanguageColor(repo.language) }}
-                        />
+                      <span className="project-lang">
+                        <span className="lang-dot" style={{ background: getLanguageColor(repo.language) }} />
                         {repo.language}
                       </span>
                     )}
-                    <span className="project-updated">
-                      Updated {formatDate(repo.pushedAt)}
-                    </span>
+                    <span className="project-updated">Updated {formatDate(repo.pushedAt)}</span>
                   </div>
 
-                  {repo.topics.length > 0 && (
-                    <div className="project-tags">
-                      {repo.topics.slice(0, 4).map((topic) => (
-                        <span key={topic} className="project-tag">
-                          {topic}
-                        </span>
+                  {repo.topics?.length > 0 && (
+                    <div className="project-topics">
+                      {repo.topics.slice(0, 4).map((t) => (
+                        <span key={t} className="project-topic">{t}</span>
                       ))}
                     </div>
                   )}
-
-                  <div className="project-link-indicator">
-                    <FiExternalLink size={16} />
-                  </div>
                 </motion.a>
               ))}
             </motion.div>
@@ -216,62 +190,51 @@ const Projects = () => {
 
         {repos.length > 6 && (
           <motion.div
-            className="view-more-container"
-            initial={{ opacity: 0, y: 20 }}
+            className="projects-cta"
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.45 }}
           >
             <a
               href="https://github.com/omaratef3221?tab=repositories"
               target="_blank"
               rel="noopener noreferrer"
-              className="view-more-btn"
+              className="pub-link"
             >
-              <FiGithub size={18} />
-              <span>View all {repos.length} repositories on GitHub</span>
-              <FiArrowRight size={18} />
+              <FiGithub size={16} />
+              <span>All {repos.length} repositories</span>
+              <FiArrowRight size={14} />
             </a>
           </motion.div>
         )}
 
         <motion.div
-          className="resources-section"
-          initial={{ opacity: 0, y: 30 }}
+          className="resources"
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55 }}
         >
-          <h3 className="resources-title">
-            <FiBook />
-            Learning Resources & Content
+          <h3 className="resources-heading">
+            <FiBook size={16} /> Teaching &amp; writing
           </h3>
-
           <div className="resources-grid">
-            {resources.map((resource, index) => (
-              <motion.a
-                key={index}
-                href={resource.link}
+            {resources.map((r) => (
+              <a
+                key={r.title}
+                href={r.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="resource-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="resource"
               >
-                <div
-                  className="resource-icon"
-                  style={{ color: resource.color }}
-                >
-                  {resource.icon}
+                <div className="resource-icon">{r.icon}</div>
+                <div className="resource-body">
+                  <h4 className="resource-title">{r.title}</h4>
+                  <p className="resource-desc">{r.description}</p>
                 </div>
-                <div className="resource-content">
-                  <h4 className="resource-title">{resource.title}</h4>
-                  <p className="resource-description">{resource.description}</p>
-                </div>
-                <FiExternalLink className="resource-arrow" size={16} />
-              </motion.a>
+                <FiExternalLink size={14} className="resource-arrow" />
+              </a>
             ))}
           </div>
         </motion.div>

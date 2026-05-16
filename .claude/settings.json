@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(magick omar_portrait.png -filter Lanczos -resize 800x800^ -gravity center -extent 800x800 -gaussian-blur 0x0.5 -quality 90 omar_portrait_800.webp)",
+      "Bash(magick omar_portrait.png -filter Lanczos -resize 800x800^ -gravity center -extent 800x800 -gaussian-blur 0x0.5 -quality 88 -strip omar_portrait.jpg)",
+      "Bash(magick omar_portrait.png -filter Lanczos -resize 400x400^ -gravity center -extent 400x400 -gaussian-blur 0x0.4 -quality 88 omar_portrait_400.webp)",
+      "Bash(magick src/assets/omar_portrait_original.png -filter Lanczos -resize 1200x630^ -gravity center -extent 1200x630 -background \"#0a0a0a\" -quality 88 public/og-image.jpg)",
+      "Bash(magick src/assets/omar_portrait_original.png -filter Lanczos -resize 512x512^ -gravity center -extent 512x512 -gaussian-blur 0x0.5 -quality 90 public/omar.jpg)",
+      "Read(//private/tmp/**)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(open \"http://localhost:5173/\")"
     ]
   }
 }

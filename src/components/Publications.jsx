@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiExternalLink, FiRefreshCw, FiTrendingUp, FiAward, FiBookOpen, FiUsers, FiArrowRight } from 'react-icons/fi';
+import { FiExternalLink, FiRefreshCw, FiTrendingUp, FiAward, FiBookOpen, FiFileText, FiArrowRight } from 'react-icons/fi';
 import { SiGooglescholar, SiResearchgate } from 'react-icons/si';
 import { fetchScholarData, getCachedData, shouldRefreshData } from '../services/scholarService';
 import './Publications.css';
@@ -13,13 +13,9 @@ const Publications = () => {
 
   const loadData = async (forceRefresh = false) => {
     try {
-      if (forceRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+      if (forceRefresh) setRefreshing(true);
+      else setLoading(true);
 
-      // Check cache first for instant load
       if (!forceRefresh) {
         const cached = getCachedData();
         if (cached && !shouldRefreshData()) {
@@ -27,15 +23,14 @@ const Publications = () => {
           setLoading(false);
           return;
         }
-        // Show cached data immediately while fetching fresh data
         if (cached) {
           setData(cached);
           setLoading(false);
         }
       }
 
-      const freshData = await fetchScholarData();
-      setData(freshData);
+      const fresh = await fetchScholarData();
+      setData(fresh);
       setError(null);
     } catch (err) {
       setError('Failed to load publications');
@@ -46,261 +41,161 @@ const Publications = () => {
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const handleRefresh = () => {
     localStorage.removeItem('scholarData');
     loadData(true);
   };
 
-  const formatCitations = (num) => {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'k';
-    }
-    return num.toString();
-  };
+  const formatCitations = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n));
 
-  const getPublicationType = (venue) => {
-    const venueLower = venue.toLowerCase();
-    if (venueLower.includes('journal') || venueLower.includes('applications') || venueLower.includes('medicine')) {
-      return { type: 'Journal', color: '#10b981' };
-    }
-    if (venueLower.includes('conference') || venueLower.includes('aset') || venueLower.includes('ahit')) {
-      return { type: 'Conference', color: '#6366f1' };
-    }
-    return { type: 'Publication', color: '#8b5cf6' };
+  const venueType = (venue = '') => {
+    const v = venue.toLowerCase();
+    if (v.includes('journal') || v.includes('applications') || v.includes('medicine')) return 'Journal';
+    if (v.includes('conference') || v.includes('aset') || v.includes('ahit')) return 'Conference';
+    return 'Publication';
   };
 
   const stats = data?.stats || { totalCitations: 0, hIndex: 0, i10Index: 0 };
-  const allPublications = data?.publications || [];
-
-  // Sort by citations (highest first) and take top 4
-  const topPublications = [...allPublications]
-    .sort((a, b) => b.citations - a.citations)
-    .slice(0, 4);
+  const all = data?.publications || [];
+  const top = [...all].sort((a, b) => b.citations - a.citations).slice(0, 4);
 
   return (
-    <section id="publications" className="section publications">
+    <section id="publications" className="section publications" aria-labelledby="pub-title">
       <div className="container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="pub-header"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
-          className="publications-header"
         >
-          <div className="header-content">
-            <h2 className="section-title">Research & Publications</h2>
+          <div>
+            <span className="eyebrow">04 — Research</span>
+            <h2 id="pub-title" className="section-title">
+              Peer-reviewed <em>publications</em>.
+            </h2>
             <p className="section-subtitle">
-              Peer-reviewed contributions in AI, NLP, and healthcare
+              Q1 journals, NLP, healthcare AI, and transformer optimization. Live numbers from Google Scholar.
             </p>
           </div>
 
           <button
-            className={`refresh-btn ${refreshing ? 'refreshing' : ''}`}
+            type="button"
+            className={`pub-refresh ${refreshing ? 'is-refreshing' : ''}`}
             onClick={handleRefresh}
             disabled={refreshing}
-            title="Refresh from Google Scholar"
+            aria-label="Refresh from Google Scholar"
           >
-            <FiRefreshCw size={18} />
-            {refreshing ? 'Updating...' : 'Refresh'}
+            <FiRefreshCw size={15} />
+            <span>{refreshing ? 'Updating' : 'Sync'}</span>
           </button>
         </motion.div>
 
-        {/* Stats Cards */}
-        <motion.div
-          className="scholar-stats"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="stat-card">
-            <div className="stat-icon citations">
-              <FiTrendingUp size={24} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">
-                {loading ? '...' : formatCitations(stats.totalCitations)}
-              </span>
-              <span className="stat-label">Total Citations</span>
-            </div>
-          </div>
+        {/* Stats */}
+        <div className="pub-stats" role="list">
+          {[
+            { icon: <FiTrendingUp size={16} />, label: 'Citations', value: loading ? '…' : formatCitations(stats.totalCitations) },
+            { icon: <FiAward size={16} />, label: 'h-index', value: loading ? '…' : stats.hIndex },
+            { icon: <FiBookOpen size={16} />, label: 'i10-index', value: loading ? '…' : stats.i10Index },
+            { icon: <FiFileText size={16} />, label: 'Papers', value: loading ? '…' : all.length || '6+' },
+          ].map((s, i) => (
+            <motion.div
+              key={s.label}
+              className="pub-stat"
+              role="listitem"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+            >
+              <div className="pub-stat-icon">{s.icon}</div>
+              <div className="pub-stat-text">
+                <span className="pub-stat-value">{s.value}</span>
+                <span className="pub-stat-label">{s.label}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-          <div className="stat-card">
-            <div className="stat-icon h-index">
-              <FiAward size={24} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{loading ? '...' : stats.hIndex}</span>
-              <span className="stat-label">h-index</span>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon i10">
-              <FiBookOpen size={24} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{loading ? '...' : stats.i10Index}</span>
-              <span className="stat-label">i10-index</span>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon papers">
-              <FiUsers size={24} />
-            </div>
-            <div className="stat-content">
-              <span className="stat-value">{loading ? '...' : allPublications.length}</span>
-              <span className="stat-label">Publications</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Publications List */}
-        <div className="publications-grid">
+        {/* Publications list */}
+        <div className="pub-list-wrap">
           <AnimatePresence mode="wait">
             {loading && !data ? (
-              <motion.div
-                className="loading-state"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <div className="loading-spinner"></div>
-                <p>Fetching publications from Google Scholar...</p>
+              <motion.div key="loading" className="pub-loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <span className="pub-spinner" /> Fetching publications…
               </motion.div>
             ) : error && !data ? (
-              <motion.div
-                className="error-state"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
+              <motion.div key="error" className="pub-error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <p>{error}</p>
-                <button onClick={() => loadData()} className="btn btn-secondary">
-                  Try Again
-                </button>
+                <button onClick={() => loadData()} className="btn btn-secondary">Try again</button>
               </motion.div>
             ) : (
-              <motion.div
-                className="publications-list"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {topPublications.map((pub, index) => {
-                  const pubType = getPublicationType(pub.venue);
-                  return (
-                    <motion.article
-                      key={pub.title}
-                      className="publication-item"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: index * 0.05 }}
-                    >
-                      <div className="pub-rank">#{index + 1}</div>
-                      <div className="pub-citation-badge">
-                        <span className="citation-count">{pub.citations}</span>
-                        <span className="citation-label">citations</span>
-                      </div>
-
-                      <div className="pub-content">
-                        <div className="pub-meta">
-                          <span
-                            className="pub-type-tag"
-                            style={{ backgroundColor: `${pubType.color}20`, color: pubType.color }}
-                          >
-                            {pubType.type}
-                          </span>
-                          <span className="pub-year">{pub.year}</span>
-                        </div>
-
-                        <h3 className="pub-title">
-                          {pub.link ? (
-                            <a href={pub.link} target="_blank" rel="noopener noreferrer">
-                              {pub.title}
-                              <FiExternalLink className="title-link-icon" size={14} />
-                            </a>
-                          ) : (
-                            pub.title
-                          )}
-                        </h3>
-
-                        <p className="pub-authors">{pub.authors}</p>
-                        <p className="pub-venue">{pub.venue}</p>
-                      </div>
-                    </motion.article>
-                  );
-                })}
-
-                {/* View More Button */}
-                {allPublications.length > 4 && (
-                  <motion.div
-                    className="view-more-container"
-                    initial={{ opacity: 0, y: 20 }}
+              <motion.ol key="list" className="pub-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                {top.map((pub, i) => (
+                  <motion.li
+                    key={pub.title}
+                    className="pub-item"
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
                   >
-                    <a
-                      href="https://scholar.google.com/citations?user=lw70gLkAAAAJ&hl=en"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="view-more-btn"
-                    >
-                      <span>View all publications on Google Scholar</span>
-                      <FiArrowRight size={18} />
-                    </a>
-                  </motion.div>
-                )}
-              </motion.div>
+                    <div className="pub-rank" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+
+                    <div className="pub-content">
+                      <div className="pub-meta">
+                        <span className="pub-type">{venueType(pub.venue)}</span>
+                        <span className="pub-year">{pub.year}</span>
+                        <span className="pub-cites">{pub.citations} citations</span>
+                      </div>
+
+                      <h3 className="pub-title">
+                        {pub.link ? (
+                          <a href={pub.link} target="_blank" rel="noopener noreferrer">
+                            {pub.title}
+                            <FiExternalLink size={13} />
+                          </a>
+                        ) : pub.title}
+                      </h3>
+
+                      <p className="pub-authors">{pub.authors}</p>
+                      <p className="pub-venue">{pub.venue}</p>
+                    </div>
+                  </motion.li>
+                ))}
+              </motion.ol>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Data Source Notice */}
-        {data?.isFallback && (
-          <motion.p
-            className="data-notice"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            Showing cached data. Click refresh to fetch latest from Google Scholar.
-          </motion.p>
-        )}
-
-        {/* Profile Links */}
         <motion.div
-          className="scholar-links"
-          initial={{ opacity: 0, y: 20 }}
+          className="pub-cta"
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
         >
           <a
             href="https://scholar.google.com/citations?user=lw70gLkAAAAJ&hl=en"
             target="_blank"
             rel="noopener noreferrer"
-            className="scholar-link google"
+            className="pub-link"
           >
-            <SiGooglescholar size={20} />
-            <span>View Google Scholar Profile</span>
-            <FiExternalLink size={16} />
+            <SiGooglescholar size={16} />
+            <span>Google Scholar</span>
+            <FiArrowRight size={14} />
           </a>
           <a
             href="https://www.researchgate.net/profile/Omar-Elgendy-4"
             target="_blank"
             rel="noopener noreferrer"
-            className="scholar-link researchgate"
+            className="pub-link"
           >
-            <SiResearchgate size={20} />
-            <span>View ResearchGate Profile</span>
-            <FiExternalLink size={16} />
+            <SiResearchgate size={16} />
+            <span>ResearchGate</span>
+            <FiArrowRight size={14} />
           </a>
         </motion.div>
       </div>

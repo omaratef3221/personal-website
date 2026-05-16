@@ -1,128 +1,121 @@
 import { motion } from 'framer-motion';
-import { FiMapPin, FiMail, FiPhone, FiDownload } from 'react-icons/fi';
+import { FiMapPin, FiMail, FiDownload, FiArrowUpRight } from 'react-icons/fi';
 import './About.css';
 
-const About = () => {
-  const highlights = [
-    {
-      icon: '🎯',
-      title: 'Production AI',
-      description: 'Building and deploying ML solutions that drive real business outcomes',
-    },
-    {
-      icon: '🔬',
-      title: 'Research',
-      description: '6+ peer-reviewed publications in healthcare AI, NLP, and deep learning',
-    },
-    {
-      icon: '☁️',
-      title: 'MLOps',
-      description: 'Scalable pipelines on AWS, Docker, and modern ML infrastructure',
-    },
-    {
-      icon: '🤖',
-      title: 'LLMs & RAG',
-      description: 'Fine-tuning transformers with QLoRA, LoRA, RLHF for production apps',
-    },
-  ];
+const pillars = [
+  {
+    label: 'Production AI',
+    body:
+      'I ship — not just prototype. End-to-end ownership from problem framing to deployed services handling real traffic, real revenue, real on-call.',
+  },
+  {
+    label: 'Applied Research',
+    body:
+      '6+ peer-reviewed papers in Q1 journals (490+ citations, h-index 4) across NLP, transformer optimization, and clinical ML.',
+  },
+  {
+    label: 'MLOps & Infra',
+    body:
+      'AWS SageMaker, MLflow, Airflow, Docker, Lambda — reproducible pipelines, model versioning, CI/CD for ML.',
+  },
+  {
+    label: 'LLMs & RAG',
+    body:
+      'Fine-tuning transformers with LoRA / QLoRA / RLHF and shipping RAG systems with LangChain & LangGraph in production.',
+  },
+];
 
-  
-  return (
-    <section id="about" className="section about">
-      <div className="container">
+const About = () => (
+  <section id="about" className="section about" aria-labelledby="about-title">
+    <div className="container">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+      >
+        <span className="eyebrow">01 — About</span>
+        <h2 id="about-title" className="section-title">
+          The intersection of <em>engineering</em> and <em>research</em>.
+        </h2>
+        <p className="section-subtitle">
+          A rare combination of someone who can both prove a result in a journal and run it on production
+          infrastructure at scale.
+        </p>
+      </motion.div>
+
+      <div className="about-grid">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="about-prose"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55 }}
         >
-          <h2 className="section-title">About Me</h2>
-          <p className="section-subtitle">
-            Passionate about building intelligent systems that make a difference
+          <p>
+            I'm a Machine Learning Engineer with <strong>6+ years</strong> of production experience across
+            classical ML, deep learning, and modern LLM systems. My focus is the unsexy parts that decide whether
+            an ML feature actually ships: data, evaluation, latency, cost, observability, and the operating model
+            around the model.
           </p>
+          <p>
+            On the research side, I authored <strong>6+ peer-reviewed papers</strong> with 490+ citations and an
+            h-index of 4 — work spanning Arabic NLP, healthcare AI, and transformer optimization. I currently work
+            as ML Engineer in travel tech and continue as a part-time researcher at the{' '}
+            <strong>University of Sharjah</strong>.
+          </p>
+          <p>
+            I work best where the problem is genuinely hard — where shipping it requires both a research mindset
+            and engineering discipline. Comfortable embedding with product, leading technical decisions, and
+            mentoring.
+          </p>
+
+          <div className="about-meta">
+            <div className="about-meta-item">
+              <FiMapPin size={16} />
+              <span>Dubai, UAE</span>
+            </div>
+            <div className="about-meta-item">
+              <FiMail size={16} />
+              <a href="mailto:omaratef3221@gmail.com">omaratef3221@gmail.com</a>
+            </div>
+          </div>
+
+          <div className="about-actions">
+            <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+              <FiDownload size={16} /> Download CV
+            </a>
+            <a href="#contact" className="btn btn-secondary">
+              Start a conversation <FiArrowUpRight size={16} />
+            </a>
+          </div>
         </motion.div>
 
-        <div className="about-content">
-          <motion.div
-            className="about-text"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p>
-              Machine Learning Engineer and AI Researcher with <strong>6+ years</strong> building and deploying
-              production ML systems across classical ML, deep learning, and LLMs.
-            </p>
-            <p>
-              I work across the full ML spectrum — from tree-based models and ensemble methods on structured data,
-              to transformer fine-tuning, RAG systems, and end-to-end MLOps pipelines on <strong>AWS</strong> and <strong>GCP</strong>.
-              My focus is always on solutions that deliver measurable business impact.
-            </p>
-            <p>
-              Strong MLOps background: reproducible pipelines, experiment tracking, model versioning, and automated
-              deployment using <strong>SageMaker</strong>, <strong>MLflow</strong>, <strong>Airflow</strong>, <strong>Docker</strong>, and <strong>Lambda</strong>.
-            </p>
-            <p>
-              Published researcher: <strong>6+ peer-reviewed papers</strong> (490+ citations, h-index 4) in Q1 journals —
-              covering Arabic NLP, healthcare AI, and transformer optimization. Currently ML Engineer in travel tech
-              and part-time researcher at <strong>University of Sharjah</strong>.
-            </p>
-
-            <div className="about-info">
-              <div className="info-item">
-                <FiMapPin />
-                <span>Dubai, United Arab Emirates</span>
-              </div>
-              <div className="info-item">
-                <FiMail />
-                <a href="mailto:omaratef3221@gmail.com">omaratef3221@gmail.com</a>
-              </div>
-              <div className="info-item">
-                <FiPhone />
-                <span>+971-558980116</span>
-              </div>
-            </div>
-
-            <a
-              href="/Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
+        <motion.div
+          className="about-pillars"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55, delay: 0.1 }}
+        >
+          {pillars.map((p, i) => (
+            <motion.div
+              key={p.label}
+              className="pillar"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.45, delay: 0.06 * i }}
             >
-              <FiDownload />
-              Download Resume
-            </a>
-          </motion.div>
-
-          <motion.div
-            className="about-highlights"
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {highlights.map((item, index) => (
-              <motion.div
-                key={item.title}
-                className="highlight-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-              >
-                <span className="highlight-icon">{item.icon}</span>
-                <div>
-                  <h3 className="highlight-title">{item.title}</h3>
-                  <p className="highlight-description">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+              <span className="pillar-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="pillar-label">{p.label}</h3>
+              <p className="pillar-body">{p.body}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default About;

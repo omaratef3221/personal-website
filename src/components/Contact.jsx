@@ -2,44 +2,45 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   FiMail,
-  FiPhone,
   FiMapPin,
   FiSend,
   FiGithub,
   FiLinkedin,
   FiYoutube,
+  FiArrowUpRight,
+  FiCheckCircle,
 } from 'react-icons/fi';
 import { SiHuggingface, SiMedium, SiGooglescholar, SiResearchgate } from 'react-icons/si';
 import './Contact.css';
 
+const socials = [
+  { icon: <FiLinkedin size={18} />, href: 'https://www.linkedin.com/in/omaratef3221/', label: 'LinkedIn' },
+  { icon: <FiGithub size={18} />, href: 'https://github.com/omaratef3221', label: 'GitHub' },
+  { icon: <SiGooglescholar size={18} />, href: 'https://scholar.google.com/citations?user=lw70gLkAAAAJ&hl=en', label: 'Google Scholar' },
+  { icon: <SiResearchgate size={18} />, href: 'https://www.researchgate.net/profile/Omar-Elgendy-4', label: 'ResearchGate' },
+  { icon: <SiHuggingface size={18} />, href: 'https://huggingface.co/Omaratef3221', label: 'Hugging Face' },
+  { icon: <SiMedium size={18} />, href: 'https://medium.com/@omaratef3221', label: 'Medium' },
+  { icon: <FiYoutube size={18} />, href: 'https://www.youtube.com/@OmarMAtef', label: 'YouTube' },
+];
+
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-  const [status, setStatus] = useState('idle'); // idle | sending | success | error
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [status, setStatus] = useState('idle');
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
     try {
       const res = await fetch('https://formspree.io/f/xovoorrv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form),
       });
       if (res.ok) {
         setStatus('success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setForm({ name: '', email: '', subject: '', message: '' });
       } else {
         setStatus('error');
       }
@@ -48,196 +49,145 @@ const Contact = () => {
     }
   };
 
-  const contactInfo = [
-    {
-      icon: <FiMail size={24} />,
-      label: 'Email',
-      value: 'omaratef3221@gmail.com',
-      href: 'mailto:omaratef3221@gmail.com',
-    },
-    {
-      icon: <FiPhone size={24} />,
-      label: 'Phone',
-      value: '+971-558980116',
-      href: 'tel:+971558980116',
-    },
-    {
-      icon: <FiMapPin size={24} />,
-      label: 'Location',
-      value: 'Dubai, United Arab Emirates',
-      href: null,
-    },
-  ];
-
-  const socialLinks = [
-    { icon: <FiGithub size={20} />, href: 'https://github.com/omaratef3221', label: 'GitHub' },
-    { icon: <FiLinkedin size={20} />, href: 'https://www.linkedin.com/in/omaratef3221/', label: 'LinkedIn' },
-    { icon: <FiYoutube size={20} />, href: 'https://www.youtube.com/@OmarMAtef', label: 'YouTube' },
-    { icon: <SiHuggingface size={20} />, href: 'https://huggingface.co/Omaratef3221', label: 'HuggingFace' },
-    { icon: <SiMedium size={20} />, href: 'https://medium.com/@omaratef3221', label: 'Medium' },
-    { icon: <SiGooglescholar size={20} />, href: 'https://scholar.google.com/citations?user=lw70gLkAAAAJ&hl=en', label: 'Google Scholar' },
-    { icon: <SiResearchgate size={20} />, href: 'https://www.researchgate.net/profile/Omar-Elgendy-4', label: 'ResearchGate' },
-  ];
-
   return (
-    <section id="contact" className="section contact">
-      <div className="bg-gradient-blur bg-gradient-blur-1"></div>
+    <section id="contact" className="section contact" aria-labelledby="contact-title">
       <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="section-title">Get In Touch</h2>
-          <p className="section-subtitle" style={{ margin: '0 auto 3rem' }}>
-            Have a project in mind or want to discuss opportunities? I'd love to hear from you.
-          </p>
-        </motion.div>
-
-        <div className="contact-content">
+        <div className="contact-grid">
           <motion.div
-            className="contact-info"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            className="contact-intro"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6 }}
           >
-            <h3 className="contact-info-title">Let's Connect</h3>
-            <p className="contact-info-text">
-              I'm currently open to new opportunities in Machine Learning and AI.
-              Whether you have a question, want to collaborate on a project, or just
-              want to say hi, feel free to reach out!
+            <span className="eyebrow">06 — Contact</span>
+            <h2 id="contact-title" className="section-title">
+              Let's build <em>something serious</em>.
+            </h2>
+            <p className="contact-lede">
+              Research collaborations, hard ML problems in production, or anything
+              else worth building — drop a line.
             </p>
 
-            <div className="contact-details">
-              {contactInfo.map((info, index) => (
-                <motion.div
-                  key={index}
-                  className="contact-detail-item"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                >
-                  <div className="contact-detail-icon">{info.icon}</div>
-                  <div>
-                    <p className="contact-detail-label">{info.label}</p>
-                    {info.href ? (
-                      <a href={info.href} className="contact-detail-value">
-                        {info.value}
-                      </a>
-                    ) : (
-                      <p className="contact-detail-value">{info.value}</p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+            <div className="contact-channels">
+              <a className="channel" href="mailto:omaratef3221@gmail.com">
+                <FiMail size={18} />
+                <div>
+                  <span className="channel-label">Email</span>
+                  <span className="channel-value">omaratef3221@gmail.com</span>
+                </div>
+                <FiArrowUpRight size={14} />
+              </a>
+              <div className="channel channel-static">
+                <FiMapPin size={18} />
+                <div>
+                  <span className="channel-label">Location</span>
+                  <span className="channel-value">Dubai, United Arab Emirates</span>
+                </div>
+              </div>
             </div>
 
-            <div className="contact-social">
-              <p className="contact-social-title">Find me on</p>
-              <div className="contact-social-links">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contact-social-link"
-                    aria-label={link.label}
-                  >
-                    {link.icon}
-                  </a>
-                ))}
-              </div>
+            <div className="contact-socials">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-social"
+                  aria-label={s.label}
+                  title={s.label}
+                >
+                  {s.icon}
+                </a>
+              ))}
             </div>
           </motion.div>
 
           <motion.form
             className="contact-form"
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            onSubmit={onSubmit}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="name" className="form-label">
-                  Your Name
-                </label>
+              <div className="form-field">
+                <label htmlFor="name">Name</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="John Doe"
+                  value={form.name}
+                  onChange={onChange}
                   required
+                  autoComplete="name"
+                  placeholder="Jane Recruiter"
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  Your Email
-                </label>
+              <div className="form-field">
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="john@example.com"
+                  value={form.email}
+                  onChange={onChange}
                   required
+                  autoComplete="email"
+                  placeholder="jane@company.com"
                 />
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="subject" className="form-label">
-                Subject
-              </label>
+            <div className="form-field">
+              <label htmlFor="subject">Subject</label>
               <input
                 type="text"
                 id="subject"
                 name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Project Collaboration"
+                value={form.subject}
+                onChange={onChange}
                 required
+                placeholder="Project collaboration"
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="message" className="form-label">
-                Message
-              </label>
+            <div className="form-field">
+              <label htmlFor="message">Message</label>
               <textarea
                 id="message"
                 name="message"
-                value={formData.message}
-                onChange={handleChange}
-                className="form-textarea"
-                placeholder="Tell me about your project..."
                 rows="5"
+                value={form.message}
+                onChange={onChange}
                 required
+                placeholder="A few lines about the team and the problem."
               />
             </div>
 
-            <button type="submit" className="btn btn-primary form-submit" disabled={status === 'sending'}>
-              <FiSend size={18} />
-              {status === 'sending' ? 'Sending...' : 'Send Message'}
+            <button
+              type="submit"
+              className="btn btn-primary form-submit"
+              disabled={status === 'sending'}
+            >
+              {status === 'sending' ? 'Sending…' : (
+                <>
+                  Send message <FiSend size={15} />
+                </>
+              )}
             </button>
 
             {status === 'success' && (
-              <p className="form-feedback form-feedback--success">Message sent! I'll get back to you soon.</p>
+              <p className="form-feedback form-feedback--ok">
+                <FiCheckCircle size={15} /> Message sent. I'll reply within 48 hours.
+              </p>
             )}
             {status === 'error' && (
-              <p className="form-feedback form-feedback--error">Something went wrong. Please try again.</p>
+              <p className="form-feedback form-feedback--err">
+                Something went wrong. Email me directly at omaratef3221@gmail.com.
+              </p>
             )}
           </motion.form>
         </div>
